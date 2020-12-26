@@ -27,3 +27,25 @@ def get_code(url):
 
 def remove_accent_from_text(text):
     return unidecode.unidecode(text)
+
+
+def correct_rounded_k_figures(figure_text):
+    try:
+        if 'K' in figure_text:
+            return int(float(figure_text.replace('K', '')) * 1000)
+        else:
+            return int(figure_text)
+    except Exception as e:
+        logging.info(f'Movies - correct figures rounded K - Error: {e}')
+        return figure_text
+
+
+def correct_figures(figure_text, figure_type):
+    try:
+        if figure_type:
+            return figure_type(figure_text)
+        else:
+            return float(figure_text)
+    except Exception as e:
+        logging.info(f'Movies - correct figures - Error: {e}')
+        return figure_text

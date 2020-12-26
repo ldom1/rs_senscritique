@@ -11,7 +11,7 @@ def get_predictions(model, uid, iid):
     return est
 
 
-def get_predicted_d(model_path, data_path):
+def get_predicted_df(model_path, data_path):
     list_files = [y for y in os.listdir(data_path) if '.csv' in y]
 
     my_user_name = 'l-giron-dom'
@@ -43,14 +43,14 @@ try:
     MODEL_PATH = STANDARD_PATH + "/models/artefact/artefact_2020-12-24.joblib"
     DATA_PATH = STANDARD_PATH + '/data/users_movies/'
 
-    df, my_user_name = get_predicted_d(model_path=MODEL_PATH, data_path=DATA_PATH)
+    df, my_user_name = get_predicted_df(model_path=MODEL_PATH, data_path=DATA_PATH)
 
 except FileNotFoundError as e:
     print(e)
     DATA_PATH = '/data/users_movies/'
     MODEL_PATH = '/models/artefact/artefact.joblib'
 
-    df, my_user_name = get_predicted_d(model_path=MODEL_PATH, data_path=DATA_PATH)
+    df, my_user_name = get_predicted_df(model_path=MODEL_PATH, data_path=DATA_PATH)
 
 
 st.write(f"Top 10 movies for you, {my_user_name}:")

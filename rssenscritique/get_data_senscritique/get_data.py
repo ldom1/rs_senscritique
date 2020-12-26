@@ -15,3 +15,5 @@ logging.info(f'Sens critique - Users movies')
 get_all_users_movies_info_and_write(db_path=DB_PATH)
 
 agregate_users_movies_files(db_path=DB_PATH)
+
+logging.info(f'Sens critique - Movies')
