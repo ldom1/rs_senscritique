@@ -1,3 +1,12 @@
+## PACKAGE SPECIFIC
+data
+data/*
+
+DEV.ipynb
+Recommendation system.ipynb
+SQL_DB_MNGT.ipynb
+
+## PYTHON SPECIFIC
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -76,6 +85,9 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+.ipynb_checkpoints/*
+
+*.ipynb
 
 # IPython
 profile_default/
