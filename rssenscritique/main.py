@@ -29,6 +29,14 @@ def get_predicted_df(model_path, data_path):
     return df, my_user_name
 
 
+def add_movies_info(df, data_path):
+    movies = pd.read_csv(data_path)
+    df = df.merge(movies, right_on='title', left_on='movies', how='inner')
+    df['main_movie_genre'] = df['main_movie_genre'].fillna('Autre')
+    df = df.sort_values(by='main_movie_genre')
+    return df
+
+
 st.write("""
 # My recommendation system - [Sens critique](https://www.senscritique.com/)
 """)
@@ -39,20 +47,32 @@ st.write("""
 
 try:
     STANDARD_PATH = os.getcwd().replace("rssenscritique", "")
-    print(STANDARD_PATH)
+    DATA_PATH = STANDARD_PATH + '/data/'
+    USER_MOVIE_PATH = DATA_PATH + 'users_movies/'
+    MOVIES_PATH = DATA_PATH + '/movies/movies.csv'
     MODEL_PATH = STANDARD_PATH + "/models/artefact/artefact_2020-12-24.joblib"
-    DATA_PATH = STANDARD_PATH + '/data/users_movies/'
 
-    df, my_user_name = get_predicted_df(model_path=MODEL_PATH, data_path=DATA_PATH)
+    df, my_user_name = get_predicted_df(model_path=MODEL_PATH, data_path=USER_MOVIE_PATH)
+    df = add_movies_info(df, data_path=MOVIES_PATH)
 
 except FileNotFoundError as e:
     print(e)
-    DATA_PATH = '/data/users_movies/'
+    DATA_PATH = '/data/'
+    USER_MOVIE_PATH = DATA_PATH + 'users_movies/'
+    MOVIES_PATH = DATA_PATH + '/movies/movies.csv'
     MODEL_PATH = '/models/artefact/artefact.joblib'
 
-    df, my_user_name = get_predicted_df(model_path=MODEL_PATH, data_path=DATA_PATH)
+    df, my_user_name = get_predicted_df(model_path=MODEL_PATH, data_path=USER_MOVIE_PATH)
+    df = add_movies_info(df, data_path=DATA_PATH + "movies/movies.csv")
 
+st.sidebar.title("Filters")
+
+# Checkbox for genre
+genre_list = [st.sidebar.selectbox("Genre:", df.main_movie_genre.unique())]
 
 st.write(f"Top 10 movies for you, {my_user_name}:")
 
-st.dataframe(df.sort_values(by='prediction_rating', ascending=False).iloc[:10])
+st.dataframe(df[df.main_movie_genre.isin(genre_list)][
+                 ['title', 'global_rating', 'prediction_rating', 'release_year', 'director_name',
+                  'main_movie_genre']].sort_values(
+    by='prediction_rating', ascending=False).iloc[:10])
